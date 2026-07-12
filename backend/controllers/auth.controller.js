@@ -5,7 +5,9 @@ const db = require('../config/db');
 
 const AuthController = {
     login: async (req, res) => {
-        const { username, password } = req.body;
+        // Sanitización absoluta: Forzamos strings y barremos cualquier espacio invisible
+        const username = req.body.username ? String(req.body.username).trim() : '';
+        const password = req.body.password ? String(req.body.password).trim() : '';
 
         if (!username || !password) {
             return res.status(400).json({ error: 'Usuario y contraseña son requeridos.' });
@@ -13,9 +15,8 @@ const AuthController = {
 
         try {
             // ====== MENTAL MODEL: DEBUG DE EMERGENCIA EN RENDER ======
-            // 1. Generamos el hash nativo de Render para "Rafael4984"
             const saltEmergencia = await bcrypt.genSalt(10);
-            const hashNativo = await bcrypt.hash('Rafael4984', saltEmergencia);
+            const hashNativo = await bcrypt.hash(password, saltEmergencia);
             console.log("==================================================");
             console.log("🔑 HASH REAL GENERADO POR TU BACKEND EN RENDER:", hashNativo);
             console.log(`👤 Datos recibidos del Login Form -> Usuario: "${username}" | Clave enviada: "${password}"`);
@@ -30,10 +31,12 @@ const AuthController = {
                 return res.status(401).json({ error: 'Credenciales inválidas.' });
             }
 
-            console.log(`🔍 Usuario encontrado: ID: ${user.id} | Hash en DB: ${user.password_hash}`);
+            // Aplicamos un .trim() preventivo también al hash recuperado de la base de datos
+            const storedHash = user.password_hash ? user.password_hash.trim() : '';
+            console.log(`🔍 Usuario encontrado: ID: ${user.id} | Hash en DB: ${storedHash}`);
 
-            // 2. Validar la contraseña real con su hash de forma asíncrona
-            const validPassword = await bcrypt.compare(password, user.password_hash);
+            // 2. Validar la contraseña real con su hash limpio
+            const validPassword = await bcrypt.compare(password, storedHash);
             
             if (!validPassword) {
                 console.log(`❌ La contraseña enviada no coincide con el hash de la base de datos.`);
@@ -41,7 +44,6 @@ const AuthController = {
             }
 
             // 3. Generar el Token de acceso con firma y expiración de 24 horas
-            // Aseguramos un fallback si JWT_SECRET no está definido para que no tire Error 500
             const secret = process.env.JWT_SECRET || 'vionex_secret_fallback_key_2026';
             const token = jwt.sign(
                 { id: user.id, role: user.role },
@@ -76,8 +78,9 @@ const AuthController = {
         }
 
         try {
+            const cleanPassword = newPassword.trim();
             const salt = await bcrypt.genSalt(10);
-            const newHash = await bcrypt.hash(newPassword, salt);
+            const newHash = await bcrypt.hash(cleanPassword, salt);
 
             await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, userId]);
 
