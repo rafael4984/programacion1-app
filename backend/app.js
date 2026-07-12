@@ -10,9 +10,13 @@ const rankingRoutes = require('./routes/ranking.routes');   // INYECTADO: Ruta d
 
 const app = express();
 
-// Middlewares globales profesionales - Configurado con permisos explícitos para desarrollo local
+// Middlewares globales profesionales - Configurado con permisos explícitos para local y producción (Vercel)
 app.use(cors({
-    origin: ['http://localhost:5500', 'http://127.0.0.1:5500'], // Orígenes permitidos desde Live Server
+    origin: [
+        'http://localhost:5500', 
+        'http://127.0.0.1:5500', 
+        'https://programacion1-app.vercel.app'
+    ], // Orígenes permitidos desde Live Server y producción
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
