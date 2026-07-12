@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking General - Programación I</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .tech-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background-color: rgba(20, 17, 34, 0.4); border-radius: 8px; overflow: hidden; }
+        .tech-table th, .tech-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .tech-table th { background-color: var(--bg-dark-tertiary); color: var(--brand-light); font-weight: 600; }
+        
+        /* Estilos premium específicos para el podio de medallas */
+        .podium-cell { display: flex; align-items: center; gap: 8px; font-weight: bold; }
+        .podium-icon { width: 24px; height: 24px; object-fit: contain; }
+        .row-gold { background: linear-gradient(90deg, rgba(255, 215, 0, 0.08) 0%, transparent 100%); }
+        .row-silver { background: linear-gradient(90deg, rgba(192, 192, 192, 0.08) 0%, transparent 100%); }
+        .row-bronze { background: linear-gradient(90deg, rgba(205, 127, 50, 0.08) 0%, transparent 100%); }
+        .text-gold { color: #ffd700 !important; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+        .text-silver { color: #e0e0e0 !important; text-shadow: 0 0 8px rgba(192, 192, 192, 0.4); }
+        .text-bronze { color: #cd7f32 !important; text-shadow: 0 0 8px rgba(205, 127, 50, 0.4); }
+
+        /* Estilos interactivos para el Perfil en el Navbar */
+        .user-profile-nav {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            user-select: none;
+        }
+        .user-profile-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .user-avatar-mini {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--brand-light, #00f0ff);
+            color: #0b0f19;
+            font-weight: bold;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+        .logout-dropdown {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #111625;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+            min-width: 140px;
+        }
+        .logout-dropdown.show {
+            display: block;
+        }
+        .logout-dropdown-item {
+            padding: 10px 15px;
+            color: #ff4a4a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .logout-dropdown-item:hover {
+            background: rgba(255, 74, 74, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand">💻 Programación I (taller)</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active"><a href="./ranking.html">📊 Ranking</a></li>
+                <li class="menu-item"><a href="./actividades.html">📝 Actividades</a></li>
+                <li class="menu-item"><a href="./profile.html">👤 Mi Perfil</a></li>
+                <li id="admin-menu-item" class="menu-item" style="display: none;"><a href="./admin.html">⚙️ Administración</a></li>
+                <li class="menu-item" style="margin-top: auto;"><a href="#" id="btn-logout-sidebar">🚪 Cerrar Sesión</a></li>
+            </ul>
+        </aside>
+
+        <nav class="navbar">
+            <h2>Pantalla de Ranking</h2>
+            <div class="user-profile-nav" id="navbar-profile-trigger">
+                <span id="nav-username" style="font-weight: 500;">Cargando...</span>
+                <div class="user-avatar-mini" id="nav-avatar-letter">-</div>
+                <!-- Menú desplegable flotante de cierre de sesión -->
+                <div class="logout-dropdown" id="logout-menu">
+                    <div class="logout-dropdown-item" id="btn-logout-navbar">🚪 Cerrar Sesión</div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--brand-light);">🏆 Cuadro de Honor</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Tabla de posiciones actualizada en tiempo real según las evaluaciones en clases.</p>
+            </div>
+
+            <div class="card table-responsive">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Puesto</th>
+                            <th>Alumno</th>
+                            <th>Nota Más Alta</th>
+                            <th>Nota Más Baja</th>
+                            <th>Actividades Hechas</th>
+                            <th>Tiempo Promedio</th>
+                            <th>Promedio General</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-table-body">
+                        <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Sincronizando con el servidor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script cargado al final del documento -->
+    <script type="module" src="../js/views/ranking.js"></script>
+</body>
+</html>

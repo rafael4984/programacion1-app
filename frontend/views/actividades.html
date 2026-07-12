@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades Prácticas - Programación I</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        /* Estilos específicos para la grilla de actividades integrados al layout maestro */
+        .activities-header-inline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+        .activities-header-inline img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .activities-header-inline h3 {
+            margin: 0;
+            color: var(--brand-light);
+        }
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        .activity-card {
+            background: var(--bg-dark-secondary, #130f2e);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .activity-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--brand-light, #00f0ff);
+        }
+        .activity-id {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--brand-light, #00f0ff);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        .activity-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main, #ffffff);
+            margin: 0 0 10px 0;
+        }
+        .activity-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted, #a0aec0);
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-line;
+        }
+        .no-activities {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted, #a0aec0);
+            background: var(--bg-dark-secondary, #130f2e);
+            border-radius: 8px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilos interactivos heredados de la ventana de Perfil */
+        .user-profile-nav {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            user-select: none;
+        }
+        .user-profile-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .user-avatar-mini {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--brand-light, #00f0ff);
+            color: #0b0f19;
+            font-weight: bold;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+        .logout-dropdown {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #111625;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+            min-width: 140px;
+        }
+        .logout-dropdown.show {
+            display: block;
+        }
+        .logout-dropdown-item {
+            padding: 10px 15px;
+            color: #ff4a4a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .logout-dropdown-item:hover {
+            background: rgba(255, 74, 74, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand">💻 Programación I ( taller)</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="./ranking.html">📊 Ranking</a></li>
+                <li class="menu-item active"><a href="./actividades.html">📝 Actividades</a></li>
+                <li class="menu-item"><a href="./profile.html">👤 Mi Perfil</a></li>
+                <!-- El botón de administración viene oculto por defecto para evitar parpadeos -->
+                <li id="admin-menu-item" class="menu-item" style="display: none;"><a href="./admin.html">⚙️ Administración</a></li>
+                <li class="menu-item" style="margin-top: auto;"><a href="#" id="btn-logout-sidebar">🚪 Cerrar Sesión</a></li>
+            </ul>
+        </aside>
+
+        <nav class="navbar">
+            <h2 id="view-title">Actividades Disponibles</h2>
+            <div class="user-profile-nav" id="navbar-profile-trigger">
+                <span id="nav-username" style="font-weight: 500;">Cargando...</span>
+                <div class="user-avatar-mini" id="nav-avatar-letter">-</div>
+                
+                <!-- Menú desplegable flotante de cierre de sesión unificado con perfil -->
+                <div class="logout-dropdown" id="logout-menu">
+                    <div class="logout-dropdown-item" id="btn-logout-navbar">🚪 Cerrar Sesión</div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="activities-header-inline">
+                    <img src="../assets/img/actividad.png" alt="Ícono de Actividades">
+                    <h3>Actividades Planteadas</h3>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Aquí se encuentran las actividades desarrolladas en clase</p>
+            </div>
+
+            <div id="activities-grid-container" class="activities-grid">
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Cargando ejercicios disponibles...</p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="../js/views/actividades.js"></script>
+</body>
+</html>

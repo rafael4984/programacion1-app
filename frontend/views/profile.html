@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil Académico - Programación I</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--brand-light);
+            margin-top: 0.5rem;
+        }
+        /* Estilos interactivos para el Perfil en el Navbar */
+        .user-profile-nav {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            user-select: none;
+        }
+        .user-profile-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .user-avatar-mini {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--brand-light, #00f0ff);
+            color: #0b0f19; /* Fondo oscuro común */
+            font-weight: bold;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+        .logout-dropdown {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #111625;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+            min-width: 140px;
+        }
+        .logout-dropdown.show {
+            display: block;
+        }
+        .logout-dropdown-item {
+            padding: 10px 15px;
+            color: #ff4a4a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .logout-dropdown-item:hover {
+            background: rgba(255, 74, 74, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand">💻 Programación I ( taller)</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="./ranking.html">📊 Ranking</a></li>
+                <li class="menu-item"><a href="./actividades.html">📝 Actividades</a></li>
+                <li class="menu-item active"><a href="./profile.html">👤 Mi Perfil</a></li>
+                <li id="admin-menu-item" class="menu-item" style="display: none;"><a href="./admin.html">⚙️ Administración</a></li>
+                <li class="menu-item" style="margin-top: auto;"><a href="#" id="btn-logout-sidebar">🚪 Cerrar Sesión</a></li>
+            </ul>
+        </aside>
+
+        <nav class="navbar">
+            <h2>Ficha de Rendimiento</h2>
+            <div class="user-profile-nav" id="navbar-profile-trigger">
+                <span id="nav-username" style="font-weight: 500;">Cargando...</span>
+                <div class="user-avatar-mini" id="nav-avatar-letter">-</div>
+                <!-- Menú desplegable flotante de cierre de sesión -->
+                <div class="logout-dropdown" id="logout-menu">
+                    <div class="logout-dropdown-item" id="btn-logout-navbar">🚪 Cerrar Sesión</div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3 id="student-fullname" style="color: var(--text-main); font-size: 1.5rem;">Cargando Alumno...</h3>
+                <p id="student-course" style="color: var(--text-muted); margin-top: 0.25rem;">Curso: -</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card stat-card">
+                    <span style="color: var(--text-muted);">Promedio General</span>
+                    <div id="stat-average" class="stat-value">-</div>
+                </div>
+                <div class="card stat-card">
+                    <span style="color: var(--text-muted);">Actividades Entregadas</span>
+                    <div id="stat-count" class="stat-value">-</div>
+                </div>
+                <div class="card stat-card">
+                    <span style="color: var(--text-muted);">Tiempo Promedio</span>
+                    <div id="stat-time" class="stat-value">- min</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">📜 Historial Detallado de Ejercicios</h3>
+            <div class="card table-responsive">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Actividad</th>
+                            <th>Tiempo Empleado</th>
+                            <th>Rúbrica (C / A / E)</th>
+                            <th>Nota Final</th>
+                            <th>Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="../js/views/profile.js"></script>
+</body>
+</html>

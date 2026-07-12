@@ -1,0 +1,89 @@
+/* Tarjetas Modernas */
+.card {
+    background-color: var(--bg-dark-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Tablas Profesionales Estilo GitHub */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tech-table th {
+    background-color: var(--bg-dark-tertiary);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tech-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.tech-table tr:hover td {
+    background-color: rgba(27, 23, 46, 0.4);
+}
+
+/* Formularios e Inputs de Entrada */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.tech-input {
+    width: 100%;
+    background-color: var(--bg-dark-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+}
+
+.tech-input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px var(--brand-glow);
+}
+
+/* Botones Tecnológicos */
+.btn-primary {
+    background-color: var(--brand-primary);
+    color: var(--text-main);
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-color: var(--brand-light);
+    transform: translateY(-1px);
+}

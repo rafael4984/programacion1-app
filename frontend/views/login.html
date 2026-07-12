@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sistema - E.E.T N°1 España</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            /* Imagen de fondo de taller con capa oscura integrada */
+            background: linear-gradient(rgba(13, 11, 20, 0.85), rgba(20, 17, 34, 0.92)), 
+                        url('../assets/img/fondo.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        /* Contenedor principal expandido a doble panel */
+        .login-container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid rgba(124, 93, 250, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: rgba(20, 17, 34, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-out;
+        }
+        /* Panel Izquierdo: Formulario */
+        .login-form-panel {
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /* Panel Derecho: Espacio Inspiracional */
+        .login-info-panel {
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, rgba(124, 93, 250, 0.15) 0%, rgba(27, 23, 46, 0.8) 100%);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .school-logo {
+            width: 85px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 15px var(--brand-glow);
+        }
+        .school-name {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--brand-light);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .course-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+        }
+        .system-title {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        /* Estilos de la Frase Motivacional */
+        .inspiration-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.5rem;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--brand-primary));
+            animation: float 4s ease-in-out infinite;
+        }
+        .inspiration-text {
+            color: var(--text-main);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            font-style: italic;
+            font-weight: 400;
+            max-width: 340px;
+        }
+        .inspiration-author {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--brand-light);
+            font-weight: 600;
+        }
+        .error-message {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 3px solid var(--danger);
+            color: var(--danger);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        /* Responsive: En celulares colapsa a una sola columna */
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 440px;
+            }
+            .login-info-panel {
+                display: none; /* Oculta el panel de la frase en pantallas chicas para priorizar el login */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-container">
+            
+            <div class="login-form-panel">
+                <div class="login-header">
+                    <img src="../assets/img/logo-colegio.jpg" alt="Logo E.E.T N°1 España" class="school-logo">
+                    <div class="school-name">E.E.T N°1 "España"</div>
+                    <div class="course-name">4to Técnico en Programación</div>
+                    <div class="system-title">Programación I (Taller)</div>
+                </div>
+
+                <div id="login-error" class="error-message"></div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" class="tech-input" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" class="tech-input" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1.25rem;">
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-info-panel">
+                <img src="../assets/img/inspiracion.png" alt="Inspiración" class="inspiration-icon">
+                <p class="inspiration-text">
+                    "La programación es el arte de crear un universo donde todo es posible y donde cada problema tiene una solución elegante"
+                </p>
+                <div class="inspiration-author">Donald Knuth / Linus Torvalds</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="../js/views/login.js"></script>
+</body>
+</html>

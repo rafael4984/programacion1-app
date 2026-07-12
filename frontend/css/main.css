@@ -1,0 +1,52 @@
+/* Variables de Diseño: Violetas Tecnológicos y Escala de Grises Premium */
+:root {
+    --bg-dark-primary: #0d0b14;     /* Fondo ultra oscuro con matiz violeta */
+    --bg-dark-secondary: #141122;   /* Contenedores, tarjetas y sidebar */
+    --bg-dark-tertiary: #1b172e;    /* Inputs, hovers y elementos interactivos */
+    
+    --brand-primary: #7c5dfa;       /* Violeta tecnológico vibrante (principal) */
+    --brand-light: #9277ff;          /* Violeta claro para hovers y estados activos */
+    --brand-glow: rgba(124, 93, 250, 0.15); /* Resplandor para enfoque e indicadores */
+    
+    --text-main: #f8f9fa;           /* Blanco puro de alta legibilidad */
+    --text-muted: #9692aa;          /* Gris violeta para datos secundarios */
+    
+    --border-color: #25213b;        /* Separadores finos y elegantes */
+    --success: #00e676;             /* Verde tecnológico para notas altas */
+    --warning: #ffb300;             /* Amarillo/Naranja para notas medias */
+    --danger: #ff5252;              /* Rojo para notas bajas/alertas */
+    
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Reset Profesional */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--bg-dark-primary);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button, input, select, textarea {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}

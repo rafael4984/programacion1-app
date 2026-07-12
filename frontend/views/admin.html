@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Programación I</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .admin-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .tab-btn { padding: 0.5rem 1rem; color: var(--text-muted); font-weight: 600; border-radius: 4px; background: none; border: none; cursor: pointer; }
+        .tab-btn.active { color: var(--text-main); background-color: var(--bg-dark-tertiary); border-bottom: 2px solid var(--brand-primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .activities-table-wrapper, .students-table-wrapper, .grades-table-wrapper { margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .tech-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background-color: rgba(20, 17, 34, 0.4); border-radius: 8px; overflow: hidden; }
+        .tech-table th, .tech-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .tech-table th { background-color: var(--bg-dark-tertiary); color: var(--brand-light); font-weight: 600; }
+        .btn-action-edit, .btn-activity-edit, .btn-grade-edit { background: none; border: none; color: var(--brand-primary); cursor: pointer; font-weight: bold; margin-right: 0.75rem; }
+        .btn-action-delete, .btn-activity-delete, .btn-grade-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand">💻 Programación I ( taller)</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="./ranking.html">📊 Ranking</a></li>
+                <li class="menu-item"><a href="./actividades.html">📝 Actividades</a></li>
+                <li class="menu-item"><a href="./profile.html">👤 Mi Perfil</a></li>
+                <li id="admin-menu-item" class="menu-item active"><a href="./admin.html">⚙️ Administración</a></li>
+                <li class="menu-item" style="margin-top: auto;"><a href="#" id="btn-logout">🚪 Cerrar Sesión</a></li>
+            </ul>
+        </aside>
+
+        <nav class="navbar">
+            <h2>Panel del Docente</h2>
+            <div class="user-profile-nav">
+                <span id="nav-username" style="font-weight: 500;">Administrador</span>
+                <div class="user-avatar-mini"></div>
+            </div>
+        </nav>
+
+        <nav class="navbar">
+            <h2>Panel del Docente</h2>
+            <div class="user-profile-nav">
+                <span id="nav-username" style="font-weight: 500;">Administrador</span>
+                <div class="user-avatar-mini"></div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="tab-grades">📝 Cargar Notas</button>
+                <button class="tab-btn" data-tab="tab-activities">📁 Nueva Actividad</button>
+                <button class="tab-btn" data-tab="tab-students">👨‍🎓 Gestión Alumnos</button>
+                <button class="tab-btn" data-tab="tab-security">🔑 Mi Seguridad</button>
+            </div>
+
+            <div id="tab-grades" class="tab-content active card">
+                <h3 id="grade-form-title" style="color: var(--brand-light); margin-bottom: 1.5rem;">Cargar Evaluación de Rúbrica</h3>
+                <form id="form-grade">
+                    <input type="hidden" id="grade-id-field" value="">
+                    <div class="grid-form">
+                        <div class="form-group">
+                            <label for="select-student">Seleccionar Alumno</label>
+                            <select id="select-student" class="tech-input" required>
+                                <option value="">Cargando alumnos del servidor...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="select-activity">Seleccionar Actividad</label>
+                            <select id="select-activity" class="tech-input" required>
+                                <option value="">Cargando actividades del servidor...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-form" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="input-time">Tiempo Empleado (Minutos)</label>
+                            <input type="number" step="0.01" id="input-time" class="tech-input" placeholder="Ej: 12.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="score-clarity">Claridad Conceptual (0 a 4 pts)</label>
+                            <input type="number" id="score-clarity" class="tech-input" min="0" max="4" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-form" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="score-algorithm">Funcionamiento Algoritmo (0 a 4 pts)</label>
+                            <input type="number" id="score-algorithm" class="tech-input" min="0" max="4" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="score-efficiency">Eficiencia de Código (0 a 2 pts)</label>
+                            <input type="number" id="score-efficiency" class="tech-input" min="0" max="2" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="input-comment">Comentario u Observaciones</label>
+                        <textarea id="input-comment" class="tech-input" rows="3" placeholder="Ej: Excelente optimización del uso de memoria o detalles a mejorar..."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="submit" id="btn-grade-submit" class="btn-primary" style="flex: 1;">Guardar y Calcular Calificación</button>
+                        <button type="button" id="btn-grade-cancel" class="btn-primary" style="background-color: var(--bg-dark-tertiary); display: none;">Cancelar Edición</button>
+                    </div>
+                </form>
+
+                <div class="grades-table-wrapper">
+                    <h3 style="color: var(--brand-light); margin-bottom: 0.5rem;">Historial de Notas Cargadas</h3>
+                    <table class="tech-table">
+                        <thead>
+                            <tr>
+                                <th>Alumno</th>
+                                <th>Actividad</th>
+                                <th style="width: 80px; text-align: center;">Tiempo</th>
+                                <th style="width: 80px; text-align: center;">Nota</th>
+                                <th>Comentarios</th>
+                                <th style="width: 120px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-grades-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted);">Cargando historial de calificaciones...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-activities" class="tab-content card">
+                <h3 id="activity-form-title" style="color: var(--brand-light); margin-bottom: 1.5rem;">Crear Nueva Actividad Práctica</h3>
+                <form id="form-activity">
+                    <div class="form-group">
+                        <label for="activity-title">Título de la Actividad</label>
+                        <input type="text" id="activity-title" class="tech-input" placeholder="Ej: Ejercicio 4 - Bucles Anidados" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-desc">Descripción / Consigna</label>
+                        <textarea id="activity-desc" class="tech-input" rows="4" placeholder="Detalles del algoritmo a resolver..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 1rem;">Publicar Actividad</button>
+                </form>
+
+                <div class="activities-table-wrapper">
+                    <h3 style="color: var(--brand-light); margin-bottom: 0.5rem;">Actividades Registradas</h3>
+                    <table class="tech-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th style="width: 250px;">Título</th>
+                                <th>Descripción / Consigna</th>
+                                <th style="width: 120px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-activities-body">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">Cargando actividades...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-students" class="tab-content card">
+                <h3 id="student-form-title" style="color: var(--brand-light); margin-bottom: 1.5rem;">Registrar Nuevo Alumno</h3>
+                <form id="form-student">
+                    <input type="hidden" id="student-id-field" value="">
+                    <div class="form-group">
+                        <label for="student-name">Nombre y Apellido Completo</label>
+                        <input type="text" id="student-name" class="tech-input" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    <div class="grid-form" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="student-username">Nombre de Usuario (DNI)</label>
+                            <input type="text" id="student-username" class="tech-input" placeholder="Ej: 43633237" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student-password">Contraseña</label>
+                            <input type="password" id="student-password" class="tech-input" placeholder="Dejar en blanco para no modificar al editar">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="submit" id="btn-student-submit" class="btn-primary">Guardar Alumno</button>
+                        <button type="button" id="btn-student-cancel" class="btn-primary" style="background-color: var(--bg-dark-tertiary); display: none;">Cancelar Edición</button>
+                    </div>
+                </form>
+
+                <div class="students-table-wrapper">
+                    <h3 style="color: var(--brand-light); margin-bottom: 0.5rem;">Perfiles de Alumnos Creados</h3>
+                    <table class="tech-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th>Nombre Completo</th>
+                                <th>Usuario (DNI)</th>
+                                <th style="width: 150px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-students-body">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">Cargando perfiles...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-security" class="tab-content card">
+                <h3 style="color: var(--brand-light); margin-bottom: 1.5rem;">Actualizar Contraseña de Administrador</h3>
+                <form id="form-change-password">
+                    <div class="form-group" style="max-width: 400px;">
+                        <label for="new-password">Nueva Contraseña</label>
+                        <input type="password" id="new-password" class="tech-input" required minlength="4">
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 1rem;">Guardar Nueva Contraseña</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="../js/views/admin.js"></script>
+</body>
+</html>

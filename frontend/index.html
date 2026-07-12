@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sistema - Programación I</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <style>
+        /* Estilos específicos de la vista de login para mantener el aislamiento */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: radial-gradient(circle at center, #1b1437 0%, var(--bg-dark-primary) 70%);
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .error-message {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 3px solid var(--danger);
+            color: var(--danger);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            display: none; /* Se muestra dinámicamente */
+        }
+        /* Botón secundario estilizado en armonía con los componentes del proyecto */
+        .btn-secondary-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .btn-secondary-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-secondary-link img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="card login-card">
+            <div class="login-header">
+                <h1>Programación I</h1>
+                <p>Ingresá tus credenciales para acceder al taller</p>
+            </div>
+
+            <div id="login-error" class="error-message"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" class="tech-input" placeholder="Ej: rdelgado" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="tech-input" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Iniciar Sesión
+                </button>
+                
+                <a href="./views/actividades.html" class="btn-secondary-link">
+    <img src="./assets/img/actividad.png" alt="Icono">
+    Ver Actividades Planteadas
+</a>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/js/views/login.js"></script>
+</body>
+</html>
