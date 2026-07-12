@@ -33,7 +33,7 @@ const ActivityController = {
             const { rows } = await db.query(query, [title, description, parseInt(id)]);
 
             if (rows.length === 0) {
-                return res.status(404).json({ error: 'La actividad especificada no existe.' });
+                return res.status(404).json({ error: 'La actividad específica no existe.' });
             }
 
             res.json({ message: 'Actividad actualizada con éxito.', updatedActivity: rows[0] });
@@ -65,7 +65,6 @@ const ActivityController = {
     submitGrade: async (req, res) => {
         const { student_id, activity_id, time_minutes, score_clarity, score_algorithm, score_efficiency, comment } = req.body;
         
-        // Validaciones de rangos para la rúbrica (4pts, 4pts, 2pts)
         if (Number(score_clarity) < 0 || Number(score_clarity) > 4) {
             return res.status(400).json({ error: 'La claridad conceptual debe estar entre 0 y 4 puntos.' });
         }
@@ -76,7 +75,6 @@ const ActivityController = {
             return res.status(400).json({ error: 'La eficiencia de código debe estar entre 0 y 2 puntos.' });
         }
 
-        // Validación de duplicados por combinación Alumno + Actividad
         try {
             const checkQuery = 'SELECT id FROM evaluations WHERE student_id = $1 AND activity_id = $2';
             const checkRes = await db.query(checkQuery, [parseInt(student_id), parseInt(activity_id)]);
@@ -87,12 +85,10 @@ const ActivityController = {
             console.error('Error al verificar duplicado de evaluación:', err);
         }
 
-        // CORRECCIÓN: El tiempo ahora vale 0 puntos y no influye en la nota final
         const score_time = 0; 
         const final_grade = Math.round(Number(score_clarity) + Number(score_algorithm) + Number(score_efficiency));
 
         try {
-            // Pasamos comment pero recordá que el modelo actual lo ignora de forma segura por ahora
             const evaluation = await EvaluationModel.createEvaluation({
                 student_id: parseInt(student_id), 
                 activity_id: parseInt(activity_id), 
@@ -113,7 +109,7 @@ const ActivityController = {
 
     getAllEvaluations: async (req, res) => {
         try {
-            // SOLUCIÓN TEMPORAL: Cambiamos e.comment por '' AS comment para evitar el Error 42703 que frena el backend
+            // HABILITADO: Traemos e.comment directo de la base de datos real
             const query = `
                 SELECT 
                     e.id,
@@ -126,7 +122,7 @@ const ActivityController = {
                     e.score_algorithm,
                     e.score_efficiency,
                     e.final_grade,
-                    '' AS comment
+                    e.comment
                 FROM evaluations e
                 JOIN students s ON e.student_id = s.id
                 JOIN activities a ON e.activity_id = a.id
@@ -144,7 +140,6 @@ const ActivityController = {
         const { id } = req.params;
         const { time_minutes, score_clarity, score_algorithm, score_efficiency, comment } = req.body;
 
-        // Validaciones de rangos para la edición de la rúbrica
         if (Number(score_clarity) < 0 || Number(score_clarity) > 4) {
             return res.status(400).json({ error: 'La claridad conceptual debe estar entre 0 y 4 puntos.' });
         }
@@ -159,12 +154,12 @@ const ActivityController = {
         const final_grade = Math.round(Number(score_clarity) + Number(score_algorithm) + Number(score_efficiency));
 
         try {
-            // MODIFICACIÓN TEMPORAL: Quitamos la asignación de comment en el SET para evitar fallos en Render
+            // HABILITADO: El update ahora persiste correctamente los comentarios editados
             const query = `
                 UPDATE evaluations
                 SET time_minutes = $1, score_time = $2, score_clarity = $3, 
-                    score_algorithm = $4, score_efficiency = $5, final_grade = $6
-                WHERE id = $7 RETURNING *
+                    score_algorithm = $4, score_efficiency = $5, final_grade = $6, comment = $7
+                WHERE id = $8 RETURNING *
             `;
             const { rows } = await db.query(query, [
                 parseFloat(time_minutes),
@@ -173,6 +168,7 @@ const ActivityController = {
                 parseInt(score_algorithm),
                 parseInt(score_efficiency),
                 parseInt(final_grade),
+                comment || null,
                 parseInt(id)
             ]);
 
