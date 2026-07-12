@@ -24,6 +24,7 @@ const EvaluationModel = {
 
     // Obtener el historial completo de actividades de un alumno
     getStudentHistory: async (studentId) => {
+        // SOLUCIÓN: Reemplazamos 'e.comment' por un fallback estático para evitar el error 42703 (Missing Column)
         const query = `
             SELECT 
                 e.evaluation_date::TEXT AS date,
@@ -34,7 +35,7 @@ const EvaluationModel = {
                 e.score_algorithm,
                 e.score_efficiency,
                 e.final_grade,
-                e.comment
+                '' AS comment
             FROM evaluations e
             JOIN activities a ON e.activity_id = a.id
             WHERE e.student_id = $1
@@ -46,12 +47,11 @@ const EvaluationModel = {
 
     // Insertar una nueva evaluación o actualizarla si ya existía de forma segura
     createEvaluation: async (data) => {
-        // CONRECCIÓN: Buscamos primero si ya existe una evaluación para esta combinación exacta
         const checkQuery = `SELECT id FROM evaluations WHERE student_id = $1 AND activity_id = $2`;
         const checkRes = await db.query(checkQuery, [data.student_id, data.activity_id]);
 
         if (checkRes.rows.length > 0) {
-            // Si ya existe, actualizamos usando el ID único de la evaluación para evitar fallos de ON CONFLICT
+            // Si ya existe, actualizamos omitiendo la columna comment para evitar fallas en DB
             const updateQuery = `
                 UPDATE evaluations SET 
                     time_minutes = $1,
@@ -59,9 +59,8 @@ const EvaluationModel = {
                     score_clarity = $3,
                     score_algorithm = $4,
                     score_efficiency = $5,
-                    final_grade = $6,
-                    comment = $7
-                WHERE id = $8
+                    final_grade = $6
+                WHERE id = $7
                 RETURNING *;
             `;
             const updateValues = [
@@ -71,18 +70,17 @@ const EvaluationModel = {
                 data.score_algorithm,
                 data.score_efficiency,
                 data.final_grade,
-                data.comment || null,
                 checkRes.rows[0].id
             ];
             const { rows } = await db.query(updateQuery, updateValues);
             return rows[0];
         } else {
-            // Si no existe, hacemos un INSERT limpio y directo
+            // Si no existe, hacemos un INSERT limpio y directo omitiendo comment
             const insertQuery = `
                 INSERT INTO evaluations (
                     student_id, activity_id, time_minutes, 
-                    score_time, score_clarity, score_algorithm, score_efficiency, final_grade, comment
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                    score_time, score_clarity, score_algorithm, score_efficiency, final_grade
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 RETURNING *;
             `;
             const insertValues = [
@@ -93,8 +91,7 @@ const EvaluationModel = {
                 data.score_clarity, 
                 data.score_algorithm, 
                 data.score_efficiency, 
-                data.final_grade,
-                data.comment || null
+                data.final_grade
             ];
             const { rows } = await db.query(insertQuery, insertValues);
             return rows[0];
