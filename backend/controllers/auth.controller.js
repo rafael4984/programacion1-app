@@ -12,22 +12,40 @@ const AuthController = {
         }
 
         try {
+            // ====== MENTAL MODEL: DEBUG DE EMERGENCIA EN RENDER ======
+            // 1. Generamos el hash nativo de Render para "Rafael4984"
+            const saltEmergencia = await bcrypt.genSalt(10);
+            const hashNativo = await bcrypt.hash('Rafael4984', saltEmergencia);
+            console.log("==================================================");
+            console.log("🔑 HASH REAL GENERADO POR TU BACKEND EN RENDER:", hashNativo);
+            console.log(`👤 Datos recibidos del Login Form -> Usuario: "${username}" | Clave enviada: "${password}"`);
+            console.log("==================================================");
+            // =========================================================
+
             // 1. Buscar el usuario real
             const user = await UserModel.findByUsername(username);
+            
             if (!user) {
+                console.log(`❌ El usuario "${username}" NO existe en la base de datos.`);
                 return res.status(401).json({ error: 'Credenciales inválidas.' });
             }
 
+            console.log(`🔍 Usuario encontrado: ID: ${user.id} | Hash en DB: ${user.password_hash}`);
+
             // 2. Validar la contraseña real con su hash de forma asíncrona
             const validPassword = await bcrypt.compare(password, user.password_hash);
+            
             if (!validPassword) {
+                console.log(`❌ La contraseña enviada no coincide con el hash de la base de datos.`);
                 return res.status(401).json({ error: 'Credenciales inválidas.' });
             }
 
             // 3. Generar el Token de acceso con firma y expiración de 24 horas
+            // Aseguramos un fallback si JWT_SECRET no está definido para que no tire Error 500
+            const secret = process.env.JWT_SECRET || 'vionex_secret_fallback_key_2026';
             const token = jwt.sign(
                 { id: user.id, role: user.role },
-                process.env.JWT_SECRET,
+                secret,
                 { expiresIn: '24h' }
             );
 
