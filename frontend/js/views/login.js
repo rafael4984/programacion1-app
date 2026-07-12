@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
             errorDisplay.textContent = '';
         }
 
+        // Aplicamos .trim() estricto a ambos campos para evitar caracteres o espacios fantasmas
         const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
+        const password = document.getElementById('password').value.trim();
 
         if (!username || !password) {
             showError('Por favor, completa todos los campos.');
