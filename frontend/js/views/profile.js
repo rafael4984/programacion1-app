@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${row.final_grade}
                 </td>
                 <td style="max-width: 250px; word-break: break-word;">
-                    ${row.commentHTML || commentHTML}
+                    ${commentHTML}
                 </td>
             `;
 
@@ -136,6 +136,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error cargando el historial de perfil:", error);
     }
 });
