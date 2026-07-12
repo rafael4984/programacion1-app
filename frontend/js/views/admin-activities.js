@@ -1,7 +1,7 @@
 // Configuración de URL dinámica para producción y desarrollo
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : 'https://vionex-backend.onrender.com';
+    : 'https://vionex-backend-s34l.onrender.com';
 
 // Módulo de gestión para la Ventana de Actividades
 export const ActivitiesModule = {
